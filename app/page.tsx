@@ -1,23 +1,43 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type Trip = {
+  destination: string;
+  budget: string;
+};
 
 export default function Page() {
   const [destination, setDestination] = useState("");
   const [budget, setBudget] = useState("");
   const [showTrip, setShowTrip] = useState(false);
-  const [savedTrips, setSavedTrips] = useState<
-    { destination: string; budget: string }[]
-  >([]);
+  const [savedTrips, setSavedTrips] = useState<Trip[]>([]);
+
+  useEffect(() => {
+    const data = localStorage.getItem("ainevor-saved-trips");
+    if (data) {
+      setSavedTrips(JSON.parse(data));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "ainevor-saved-trips",
+      JSON.stringify(savedTrips)
+    );
+  }, [savedTrips]);
 
   function saveTrip() {
     if (!destination || !budget) return;
 
-    setSavedTrips([
-      ...savedTrips,
-      { destination, budget }
-    ]);
+    const newTrip = { destination, budget };
+    setSavedTrips((prev) => [...prev, newTrip]);
+  }
+
+  function clearTrips() {
+    setSavedTrips([]);
+    localStorage.removeItem("ainevor-saved-trips");
   }
 
   return (
@@ -169,9 +189,18 @@ export default function Page() {
         {savedTrips.length > 0 && (
           <div className="mt-10">
 
-            <h2 className="text-3xl font-bold mb-4">
-              Saved Trips
-            </h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-3xl font-bold">
+                Saved Trips
+              </h2>
+
+              <button
+                onClick={clearTrips}
+                className="text-red-400 text-sm"
+              >
+                Clear All
+              </button>
+            </div>
 
             {savedTrips.map((trip, index) => (
               <div
