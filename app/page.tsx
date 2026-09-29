@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,6 +7,40 @@ type Trip = {
   budget: string;
 };
 
+function getItinerary(destination: string) {
+  const place = destination.toLowerCase();
+
+  if (place.includes("goa")) {
+    return [
+      "🏖️ Day 1 – Baga Beach & Candolim",
+      "🍤 Day 2 – Goan Seafood & Old Goa",
+      "🌅 Day 3 – Sunset at Chapora Fort",
+    ];
+  }
+
+  if (place.includes("manali")) {
+    return [
+      "🏔️ Day 1 – Mall Road & Hidimba Temple",
+      "❄️ Day 2 – Solang Valley & Snow Activities",
+      "☕ Day 3 – Old Manali Cafés",
+    ];
+  }
+
+  if (place.includes("dubai")) {
+    return [
+      "🌆 Day 1 – Burj Khalifa & Downtown Dubai",
+      "🏜️ Day 2 – Desert Safari",
+      "🛥️ Day 3 – Dubai Marina & JBR",
+    ];
+  }
+
+  return [
+    "📍 Day 1 – Explore famous attractions",
+    "🍜 Day 2 – Local food & culture",
+    "🛍️ Day 3 – Shopping & sightseeing",
+  ];
+}
+
 export default function Page() {
   const [destination, setDestination] = useState("");
   const [budget, setBudget] = useState("");
@@ -16,6 +49,7 @@ export default function Page() {
 
   useEffect(() => {
     const data = localStorage.getItem("ainevor-saved-trips");
+
     if (data) {
       setSavedTrips(JSON.parse(data));
     }
@@ -31,7 +65,11 @@ export default function Page() {
   function saveTrip() {
     if (!destination || !budget) return;
 
-    const newTrip = { destination, budget };
+    const newTrip = {
+      destination,
+      budget,
+    };
+
     setSavedTrips((prev) => [...prev, newTrip]);
   }
 
@@ -39,6 +77,8 @@ export default function Page() {
     setSavedTrips([]);
     localStorage.removeItem("ainevor-saved-trips");
   }
+
+  const itinerary = getItinerary(destination);
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-10">
@@ -94,19 +134,20 @@ export default function Page() {
               💰 Budget: ₹{budget || "15,000"}
             </p>
 
-            <div className="mt-6 space-y-4">
+            <h3 className="text-2xl font-bold mt-8 mb-4">
+              Smart Itinerary
+            </h3>
 
-              <div className="bg-black rounded-2xl p-4 border border-zinc-800">
-                🌅 Day 1 – Explore famous attractions
-              </div>
+            <div className="space-y-4">
 
-              <div className="bg-black rounded-2xl p-4 border border-zinc-800">
-                🍜 Day 2 – Local food & culture
-              </div>
-
-              <div className="bg-black rounded-2xl p-4 border border-zinc-800">
-                🛍️ Day 3 – Shopping & return
-              </div>
+              {itinerary.map((day, index) => (
+                <div
+                  key={index}
+                  className="bg-black rounded-2xl p-4 border border-zinc-800"
+                >
+                  {day}
+                </div>
+              ))}
 
             </div>
 
@@ -122,9 +163,11 @@ export default function Page() {
                   alt="Hotel"
                   className="w-full h-40 object-cover rounded-xl"
                 />
+
                 <h4 className="mt-3 font-semibold">
                   Beach Resort
                 </h4>
+
                 <p className="text-gray-400">
                   ₹3,500 / night
                 </p>
@@ -136,9 +179,11 @@ export default function Page() {
                   alt="Hotel"
                   className="w-full h-40 object-cover rounded-xl"
                 />
+
                 <h4 className="mt-3 font-semibold">
                   City Hotel
                 </h4>
+
                 <p className="text-gray-400">
                   ₹2,800 / night
                 </p>
@@ -158,6 +203,7 @@ export default function Page() {
                   alt="Food"
                   className="w-full h-40 object-cover rounded-xl"
                 />
+
                 <h4 className="mt-3 font-semibold">
                   Goan Seafood
                 </h4>
@@ -169,6 +215,7 @@ export default function Page() {
                   alt="Food"
                   className="w-full h-40 object-cover rounded-xl"
                 />
+
                 <h4 className="mt-3 font-semibold">
                   Fish Curry Rice
                 </h4>
@@ -190,6 +237,7 @@ export default function Page() {
           <div className="mt-10">
 
             <div className="flex justify-between items-center mb-4">
+
               <h2 className="text-3xl font-bold">
                 Saved Trips
               </h2>
@@ -200,6 +248,7 @@ export default function Page() {
               >
                 Clear All
               </button>
+
             </div>
 
             {savedTrips.map((trip, index) => (
@@ -207,6 +256,7 @@ export default function Page() {
                 key={index}
                 className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-3"
               >
+
                 <h3 className="font-semibold">
                   {trip.destination}
                 </h3>
@@ -214,6 +264,7 @@ export default function Page() {
                 <p className="text-gray-400">
                   Budget: ₹{trip.budget}
                 </p>
+
               </div>
             ))}
 
