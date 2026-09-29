@@ -111,6 +111,108 @@ function getFlights(destination: string) {
   ];
 }
 
+function getHotels(destination: string) {
+  const place = destination.toLowerCase();
+
+  if (place.includes("goa")) {
+    return [
+      {
+        name: "Goa Beach Resort",
+        location: "North Goa • Near Baga Beach",
+        rating: "4.6",
+        reviews: "1,248",
+        room: "Deluxe Sea View Room",
+        price: "₹3,500",
+        image:
+          "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900",
+      },
+      {
+        name: "Goa City Hotel",
+        location: "Panaji • Central Location",
+        rating: "4.4",
+        reviews: "856",
+        room: "Premium King Room",
+        price: "₹2,800",
+        image:
+          "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900",
+      },
+    ];
+  }
+
+  if (place.includes("manali")) {
+    return [
+      {
+        name: "Mountain View Resort",
+        location: "Manali • Near Mall Road",
+        rating: "4.7",
+        reviews: "932",
+        room: "Mountain View Room",
+        price: "₹4,200",
+        image:
+          "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900",
+      },
+      {
+        name: "Old Manali Stay",
+        location: "Old Manali • River Side",
+        rating: "4.5",
+        reviews: "641",
+        room: "Cozy Deluxe Room",
+        price: "₹3,100",
+        image:
+          "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900",
+      },
+    ];
+  }
+
+  if (place.includes("dubai")) {
+    return [
+      {
+        name: "Dubai Downtown Hotel",
+        location: "Downtown Dubai • Near Burj Khalifa",
+        rating: "4.8",
+        reviews: "2,315",
+        room: "Deluxe City View Room",
+        price: "₹9,500",
+        image:
+          "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=900",
+      },
+      {
+        name: "Dubai Marina Hotel",
+        location: "Dubai Marina • Near JBR",
+        rating: "4.6",
+        reviews: "1,784",
+        room: "Marina View Room",
+        price: "₹8,200",
+        image:
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900",
+      },
+    ];
+  }
+
+  return [
+    {
+      name: "Premium City Hotel",
+      location: "Central Location",
+      rating: "4.5",
+      reviews: "980",
+      room: "Deluxe Room",
+      price: "₹4,500",
+      image:
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900",
+    },
+    {
+      name: "Comfort Stay",
+      location: "Near Main Attractions",
+      rating: "4.3",
+      reviews: "620",
+      room: "King Room",
+      price: "₹3,500",
+      image:
+        "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900",
+    },
+  ];
+}
+
 export default function Page() {
   const [destination, setDestination] = useState("");
   const [budget, setBudget] = useState("");
@@ -150,6 +252,7 @@ export default function Page() {
 
   const itinerary = getItinerary(destination);
   const flights = getFlights(destination);
+  const hotels = getHotels(destination);
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-10">
@@ -274,46 +377,75 @@ export default function Page() {
             </div>
 
             <h3 className="text-2xl font-bold mt-10 mb-4">
-              Recommended Hotels
+              🏨 Hotels
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
 
-              <div className="bg-black rounded-2xl p-3 border border-zinc-800">
+              {hotels.map((hotel, index) => (
+                <div
+                  key={index}
+                  className="bg-black rounded-2xl overflow-hidden border border-zinc-800"
+                >
 
-                <img
-                  src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900"
-                  alt="Hotel"
-                  className="w-full h-40 object-cover rounded-xl"
-                />
+                  <img
+                    src={hotel.image}
+                    alt={hotel.name}
+                    className="w-full h-48 object-cover"
+                  />
 
-                <h4 className="mt-3 font-semibold">
-                  Beach Resort
-                </h4>
+                  <div className="p-5">
 
-                <p className="text-gray-400">
-                  ₹3,500 / night
-                </p>
+                    <div className="flex justify-between items-start gap-4">
 
-              </div>
+                      <div>
+                        <h4 className="text-xl font-bold">
+                          {hotel.name}
+                        </h4>
 
-              <div className="bg-black rounded-2xl p-3 border border-zinc-800">
+                        <p className="text-gray-400 mt-1">
+                          📍 {hotel.location}
+                        </p>
+                      </div>
 
-                <img
-                  src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900"
-                  alt="Hotel"
-                  className="w-full h-40 object-cover rounded-xl"
-                />
+                      <div className="bg-green-500 text-black px-2 py-1 rounded-lg font-bold text-sm">
+                        ⭐ {hotel.rating}
+                      </div>
 
-                <h4 className="mt-3 font-semibold">
-                  City Hotel
-                </h4>
+                    </div>
 
-                <p className="text-gray-400">
-                  ₹2,800 / night
-                </p>
+                    <p className="text-gray-500 text-sm mt-2">
+                      {hotel.reviews} reviews
+                    </p>
 
-              </div>
+                    <div className="mt-4 bg-zinc-900 rounded-xl p-3">
+                      🛏️ {hotel.room}
+                    </div>
+
+                    <div className="flex justify-between items-center mt-5">
+
+                      <div>
+                        <p className="text-2xl font-bold">
+                          {hotel.price}
+                        </p>
+
+                        <p className="text-gray-500 text-sm">
+                          per night
+                        </p>
+                      </div>
+
+                      <button
+                        className="bg-white text-black px-5 py-3 rounded-xl font-bold"
+                      >
+                        Book Hotel
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              ))}
 
             </div>
 
