@@ -41,6 +41,76 @@ function getItinerary(destination: string) {
   ];
 }
 
+function getFlights(destination: string) {
+  const place = destination.toLowerCase();
+
+  if (place.includes("goa")) {
+    return [
+      {
+        route: "Delhi → Goa",
+        time: "10:30 AM → 12:55 PM",
+        airline: "IndiGo",
+        price: "₹4,999",
+      },
+      {
+        route: "Mumbai → Goa",
+        time: "2:15 PM → 3:25 PM",
+        airline: "Air India Express",
+        price: "₹3,499",
+      },
+    ];
+  }
+
+  if (place.includes("manali")) {
+    return [
+      {
+        route: "Delhi → Chandigarh",
+        time: "9:00 AM → 10:05 AM",
+        airline: "IndiGo",
+        price: "₹3,999",
+      },
+      {
+        route: "Delhi → Bhuntar",
+        time: "11:30 AM → 12:50 PM",
+        airline: "Alliance Air",
+        price: "₹5,499",
+      },
+    ];
+  }
+
+  if (place.includes("dubai")) {
+    return [
+      {
+        route: "Delhi → Dubai",
+        time: "9:30 PM → 12:00 AM",
+        airline: "Emirates",
+        price: "₹18,999",
+      },
+      {
+        route: "Mumbai → Dubai",
+        time: "7:45 PM → 9:35 PM",
+        airline: "IndiGo",
+        price: "₹14,999",
+      },
+    ];
+  }
+
+  return [
+    {
+      route: "Delhi → Destination",
+      time: "10:00 AM → 12:30 PM",
+      airline: "IndiGo",
+      price: "₹5,999",
+    },
+    {
+      route: "Mumbai → Destination",
+      time: "2:00 PM → 4:20 PM",
+      airline: "Air India Express",
+      price: "₹6,499",
+    },
+  ];
+}
+
 export default function Page() {
   const [destination, setDestination] = useState("");
   const [budget, setBudget] = useState("");
@@ -79,6 +149,7 @@ export default function Page() {
   }
 
   const itinerary = getItinerary(destination);
+  const flights = getFlights(destination);
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-10">
@@ -152,12 +223,64 @@ export default function Page() {
             </div>
 
             <h3 className="text-2xl font-bold mt-10 mb-4">
+              ✈️ Flights
+            </h3>
+
+            <div className="space-y-4">
+
+              {flights.map((flight, index) => (
+                <div
+                  key={index}
+                  className="bg-black rounded-2xl p-5 border border-zinc-800"
+                >
+
+                  <div className="flex justify-between items-start">
+
+                    <div>
+                      <h4 className="text-lg font-bold">
+                        {flight.route}
+                      </h4>
+
+                      <p className="text-gray-400 mt-1">
+                        🕐 {flight.time}
+                      </p>
+
+                      <p className="text-gray-400 mt-1">
+                        ✈️ {flight.airline}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-xl font-bold">
+                        {flight.price}
+                      </p>
+
+                      <p className="text-gray-500 text-sm">
+                        Economy
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <button
+                    className="w-full mt-4 bg-white text-black py-3 rounded-xl font-semibold"
+                  >
+                    View Flight
+                  </button>
+
+                </div>
+              ))}
+
+            </div>
+
+            <h3 className="text-2xl font-bold mt-10 mb-4">
               Recommended Hotels
             </h3>
 
             <div className="space-y-4">
 
               <div className="bg-black rounded-2xl p-3 border border-zinc-800">
+
                 <img
                   src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900"
                   alt="Hotel"
@@ -171,9 +294,11 @@ export default function Page() {
                 <p className="text-gray-400">
                   ₹3,500 / night
                 </p>
+
               </div>
 
               <div className="bg-black rounded-2xl p-3 border border-zinc-800">
+
                 <img
                   src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900"
                   alt="Hotel"
@@ -187,6 +312,7 @@ export default function Page() {
                 <p className="text-gray-400">
                   ₹2,800 / night
                 </p>
+
               </div>
 
             </div>
@@ -198,6 +324,7 @@ export default function Page() {
             <div className="space-y-4">
 
               <div className="bg-black rounded-2xl p-3 border border-zinc-800">
+
                 <img
                   src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=900"
                   alt="Food"
@@ -207,9 +334,11 @@ export default function Page() {
                 <h4 className="mt-3 font-semibold">
                   Goan Seafood
                 </h4>
+
               </div>
 
               <div className="bg-black rounded-2xl p-3 border border-zinc-800">
+
                 <img
                   src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=900"
                   alt="Food"
@@ -219,6 +348,7 @@ export default function Page() {
                 <h4 className="mt-3 font-semibold">
                   Fish Curry Rice
                 </h4>
+
               </div>
 
             </div>
