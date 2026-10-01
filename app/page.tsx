@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react";
 
+type Expense = {
+  flight: number;
+  hotel: number;
+  food: number;
+  transport: number;
+};
+
 type Trip = {
   destination: string;
   budget: string;
@@ -213,6 +220,46 @@ function getHotels(destination: string) {
   ];
 }
 
+function priceToNumber(price: string) {
+  return Number(price.replace(/[₹,]/g, ""));
+}
+
+function getExpenseEstimate(
+  destination: string,
+  flights: ReturnType<typeof getFlights>,
+  hotels: ReturnType<typeof getHotels>
+): Expense {
+  const place = destination.toLowerCase();
+
+  const cheapestFlight = Math.min(
+    ...flights.map((flight) => priceToNumber(flight.price))
+  );
+
+  const cheapestHotel = Math.min(
+    ...hotels.map((hotel) => priceToNumber(hotel.price))
+  );
+
+  let food = 1500;
+  let transport = 1000;
+
+  if (place.includes("manali")) {
+    food = 1800;
+    transport = 1500;
+  }
+
+  if (place.includes("dubai")) {
+    food = 3500;
+    transport = 2500;
+  }
+
+  return {
+    flight: cheapestFlight,
+    hotel: cheapestHotel * 3,
+    food,
+    transport,
+  };
+}
+
 export default function Page() {
   const [destination, setDestination] = useState("");
   const [budget, setBudget] = useState("");
@@ -253,6 +300,18 @@ export default function Page() {
   const itinerary = getItinerary(destination);
   const flights = getFlights(destination);
   const hotels = getHotels(destination);
+
+  const expenses = getExpenseEstimate(
+    destination,
+    flights,
+    hotels
+  );
+
+  const totalExpense =
+    expenses.flight +
+    expenses.hotel +
+    expenses.food +
+    expenses.transport;
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-10">
@@ -480,6 +539,46 @@ export default function Page() {
                 <h4 className="mt-3 font-semibold">
                   Fish Curry Rice
                 </h4>
+
+              </div>
+
+            </div>
+
+            <h3 className="text-2xl font-bold mt-10 mb-4">
+              💰 Estimated Trip Cost
+            </h3>
+
+            <div className="bg-black rounded-2xl p-5 border border-zinc-800">
+
+              <div className="flex justify-between py-3 border-b border-zinc-800">
+                <span>✈️ Flight</span>
+                <span>₹{expenses.flight.toLocaleString("en-IN")}</span>
+              </div>
+
+              <div className="flex justify-between py-3 border-b border-zinc-800">
+                <span>🏨 Hotel • 3 Nights</span>
+                <span>₹{expenses.hotel.toLocaleString("en-IN")}</span>
+              </div>
+
+              <div className="flex justify-between py-3 border-b border-zinc-800">
+                <span>🍜 Food</span>
+                <span>₹{expenses.food.toLocaleString("en-IN")}</span>
+              </div>
+
+              <div className="flex justify-between py-3 border-b border-zinc-800">
+                <span>🚕 Local Transport</span>
+                <span>₹{expenses.transport.toLocaleString("en-IN")}</span>
+              </div>
+
+              <div className="flex justify-between items-center mt-5">
+
+                <span className="text-xl font-bold">
+                  Total Estimate
+                </span>
+
+                <span className="text-2xl font-bold text-green-400">
+                  ₹{totalExpense.toLocaleString("en-IN")}
+                </span>
 
               </div>
 
