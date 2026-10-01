@@ -313,15 +313,57 @@ export default function Page() {
     expenses.food +
     expenses.transport;
 
+  // -----------------------------
+  // BUDGET STATUS
+  // -----------------------------
+
+  const numericBudget = priceToNumber(budget);
+
+  const budgetDifference = numericBudget - totalExpense;
+
+  let budgetStatus = "Enter your budget";
+  let budgetStatusEmoji = "💰";
+  let budgetStatusClass = "text-gray-400";
+  let budgetMessage = "Set a budget to check your trip status.";
+
+  if (numericBudget > 0) {
+    if (totalExpense <= numericBudget * 0.8) {
+      budgetStatus = "Under Budget";
+      budgetStatusEmoji = "🟢";
+      budgetStatusClass = "text-green-400";
+      budgetMessage = `You have ₹${budgetDifference.toLocaleString(
+        "en-IN"
+      )} left in your budget.`;
+    } else if (totalExpense <= numericBudget) {
+      budgetStatus = "Near Budget";
+      budgetStatusEmoji = "🟡";
+      budgetStatusClass = "text-yellow-400";
+      budgetMessage = `You have ₹${budgetDifference.toLocaleString(
+        "en-IN"
+      )} left. Keep an eye on extra expenses.`;
+    } else {
+      budgetStatus = "Over Budget";
+      budgetStatusEmoji = "🔴";
+      budgetStatusClass = "text-red-400";
+      budgetMessage = `You need ₹${Math.abs(
+        budgetDifference
+      ).toLocaleString("en-IN")} more for this trip.`;
+    }
+  }
+
   return (
     <main className="min-h-screen bg-black text-white px-6 py-10">
       <div className="max-w-2xl mx-auto">
+
+        {/* HERO IMAGE */}
 
         <img
           src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=1200"
           alt="Travel"
           className="w-full h-64 object-cover rounded-3xl mb-8"
         />
+
+        {/* TITLE */}
 
         <h1 className="text-5xl font-bold text-center">
           Ainevor AI Travel
@@ -330,6 +372,8 @@ export default function Page() {
         <p className="text-center text-gray-400 mt-4">
           Plan your complete trip with AI.
         </p>
+
+        {/* INPUT AREA */}
 
         <div className="mt-8 bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
 
@@ -356,6 +400,8 @@ export default function Page() {
 
         </div>
 
+        {/* TRIP RESULT */}
+
         {showTrip && (
           <div className="mt-8 bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
 
@@ -366,6 +412,8 @@ export default function Page() {
             <p className="mt-3">
               💰 Budget: ₹{budget || "15,000"}
             </p>
+
+            {/* ITINERARY */}
 
             <h3 className="text-2xl font-bold mt-8 mb-4">
               Smart Itinerary
@@ -384,6 +432,8 @@ export default function Page() {
 
             </div>
 
+            {/* FLIGHTS */}
+
             <h3 className="text-2xl font-bold mt-10 mb-4">
               ✈️ Flights
             </h3>
@@ -399,6 +449,7 @@ export default function Page() {
                   <div className="flex justify-between items-start">
 
                     <div>
+
                       <h4 className="text-lg font-bold">
                         {flight.route}
                       </h4>
@@ -410,9 +461,11 @@ export default function Page() {
                       <p className="text-gray-400 mt-1">
                         ✈️ {flight.airline}
                       </p>
+
                     </div>
 
                     <div className="text-right">
+
                       <p className="text-xl font-bold">
                         {flight.price}
                       </p>
@@ -420,6 +473,7 @@ export default function Page() {
                       <p className="text-gray-500 text-sm">
                         Economy
                       </p>
+
                     </div>
 
                   </div>
@@ -434,6 +488,8 @@ export default function Page() {
               ))}
 
             </div>
+
+            {/* HOTELS */}
 
             <h3 className="text-2xl font-bold mt-10 mb-4">
               🏨 Hotels
@@ -458,6 +514,7 @@ export default function Page() {
                     <div className="flex justify-between items-start gap-4">
 
                       <div>
+
                         <h4 className="text-xl font-bold">
                           {hotel.name}
                         </h4>
@@ -465,6 +522,7 @@ export default function Page() {
                         <p className="text-gray-400 mt-1">
                           📍 {hotel.location}
                         </p>
+
                       </div>
 
                       <div className="bg-green-500 text-black px-2 py-1 rounded-lg font-bold text-sm">
@@ -484,6 +542,7 @@ export default function Page() {
                     <div className="flex justify-between items-center mt-5">
 
                       <div>
+
                         <p className="text-2xl font-bold">
                           {hotel.price}
                         </p>
@@ -491,6 +550,7 @@ export default function Page() {
                         <p className="text-gray-500 text-sm">
                           per night
                         </p>
+
                       </div>
 
                       <button
@@ -507,6 +567,8 @@ export default function Page() {
               ))}
 
             </div>
+
+            {/* FOOD */}
 
             <h3 className="text-2xl font-bold mt-10 mb-4">
               Must Try Food
@@ -544,6 +606,8 @@ export default function Page() {
 
             </div>
 
+            {/* EXPENSE CALCULATOR */}
+
             <h3 className="text-2xl font-bold mt-10 mb-4">
               💰 Estimated Trip Cost
             </h3>
@@ -552,22 +616,30 @@ export default function Page() {
 
               <div className="flex justify-between py-3 border-b border-zinc-800">
                 <span>✈️ Flight</span>
-                <span>₹{expenses.flight.toLocaleString("en-IN")}</span>
+                <span>
+                  ₹{expenses.flight.toLocaleString("en-IN")}
+                </span>
               </div>
 
               <div className="flex justify-between py-3 border-b border-zinc-800">
                 <span>🏨 Hotel • 3 Nights</span>
-                <span>₹{expenses.hotel.toLocaleString("en-IN")}</span>
+                <span>
+                  ₹{expenses.hotel.toLocaleString("en-IN")}
+                </span>
               </div>
 
               <div className="flex justify-between py-3 border-b border-zinc-800">
                 <span>🍜 Food</span>
-                <span>₹{expenses.food.toLocaleString("en-IN")}</span>
+                <span>
+                  ₹{expenses.food.toLocaleString("en-IN")}
+                </span>
               </div>
 
               <div className="flex justify-between py-3 border-b border-zinc-800">
                 <span>🚕 Local Transport</span>
-                <span>₹{expenses.transport.toLocaleString("en-IN")}</span>
+                <span>
+                  ₹{expenses.transport.toLocaleString("en-IN")}
+                </span>
               </div>
 
               <div className="flex justify-between items-center mt-5">
@@ -584,6 +656,86 @@ export default function Page() {
 
             </div>
 
+            {/* BUDGET STATUS */}
+
+            <h3 className="text-2xl font-bold mt-10 mb-4">
+              📊 Budget Status
+            </h3>
+
+            <div className="bg-black rounded-2xl p-6 border border-zinc-800">
+
+              <div className="flex justify-between items-center">
+
+                <div>
+
+                  <p className="text-gray-400 text-sm">
+                    Your Budget
+                  </p>
+
+                  <p className="text-2xl font-bold mt-1">
+                    ₹{numericBudget.toLocaleString("en-IN")}
+                  </p>
+
+                </div>
+
+                <div className="text-right">
+
+                  <p className={`text-xl font-bold ${budgetStatusClass}`}>
+                    {budgetStatusEmoji} {budgetStatus}
+                  </p>
+
+                  <p className="text-gray-400 text-sm mt-2">
+                    {budgetMessage}
+                  </p>
+
+                </div>
+
+              </div>
+
+              {numericBudget > 0 && (
+                <div className="mt-6">
+
+                  <div className="flex justify-between text-sm mb-2">
+
+                    <span className="text-gray-400">
+                      Budget used
+                    </span>
+
+                    <span>
+                      {Math.round(
+                        (totalExpense / numericBudget) * 100
+                      )}%
+                    </span>
+
+                  </div>
+
+                  <div className="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+
+                    <div
+                      className={`h-full rounded-full ${
+                        totalExpense > numericBudget
+                          ? "bg-red-500"
+                          : totalExpense > numericBudget * 0.8
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
+                      }`}
+                      style={{
+                        width: `${Math.min(
+                          (totalExpense / numericBudget) * 100,
+                          100
+                        )}%`,
+                      }}
+                    />
+
+                  </div>
+
+                </div>
+              )}
+
+            </div>
+
+            {/* SAVE TRIP */}
+
             <button
               onClick={saveTrip}
               className="w-full mt-8 bg-green-500 text-black py-4 rounded-xl font-bold"
@@ -593,6 +745,8 @@ export default function Page() {
 
           </div>
         )}
+
+        {/* SAVED TRIPS */}
 
         {savedTrips.length > 0 && (
           <div className="mt-10">
